@@ -1,0 +1,156 @@
+name: "LeNet"
+
+input: "cont_sentence"
+input_shape { dim: 3 dim: 1 }
+
+layer {
+  name: "inputdata"
+  type: "MemoryData"
+  top: "data"
+  top: "label"
+  memory_data_param 
+  {
+    batch_size: 1 
+    channels: 1 
+    height: 3
+    width: 100 
+  }
+}
+layer {
+    name: "reshape"
+    type: "Reshape"
+    bottom: "data"
+    top: "reshape"
+    reshape_param { shape { dim:0 dim:3 dim:-1 } }
+}
+layer {
+    name: "permute"
+    type: "Permute"
+    bottom: "reshape"
+    top: "permute"
+    permute_param {
+        order: 1
+    }
+}
+layer {
+  name: "lstm1"
+  type: "LSTM"
+  bottom: "permute"
+  bottom: "cont_sentence"
+  top: "lstm1"
+  param {
+    lr_mult: 1
+  }
+  param {
+    lr_mult: 2
+  }
+  recurrent_param {
+    num_output: 64
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "relu1"
+  type: "ReLU"
+  bottom: "lstm1"
+  top: "lstm1"
+}
+layer {
+    name: "slice_lstm1"
+    type: "Slice"
+    bottom: "lstm1"
+    top: "lstm_t1"
+    top: "lstm_t2"
+    top: "lstm_t3"
+#    top: "lstm_t4"
+    slice_param {
+        axis: 0
+        slice_point: 1
+        slice_point: 2
+#        slice_point: 3
+    }
+}
+layer {
+    name: "permute_lstm1"
+    type: "Permute"
+    bottom: "lstm_t3"
+    top: "permute_lstm1"
+    permute_param {
+        order: 1
+    }
+}
+layer {
+    name: "reshape_lstm1"
+    type: "Reshape"
+    bottom: "permute_lstm1"
+    top: "reshape_lstm1"
+    reshape_param { shape { dim:-1 dim:64 } }
+}
+layer {
+  name: "ip_1"
+  type: "InnerProduct"
+  bottom: "reshape_lstm1"
+  top: "ip_1"
+  param {
+    lr_mult: 1
+  }
+  param {
+    lr_mult: 2
+  }
+  inner_product_param {
+    num_output: 128
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "relu1"
+  type: "ReLU"
+  bottom: "ip_1"
+  top: "ip_1"
+}
+layer {
+  name: "ip"
+  type: "InnerProduct"
+  bottom: "ip_1"
+  top: "ip"
+  param {
+    lr_mult: 1
+  }
+  param {
+    lr_mult: 2
+  }
+  inner_product_param {
+    num_output: 100
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "constant"
+    }
+    #axis: 2
+  }
+}
+layer {
+  name: "silence_layer"
+  type: "Silence"
+  bottom: "lstm_t1"
+  bottom: "lstm_t2"
+  bottom: "lstm_t3"
+}
+layer {
+  name: "prob"
+  type: "Softmax"
+  bottom: "ip"
+  top: "prob"
+  #softmax_param { axis: 2 }
+}
