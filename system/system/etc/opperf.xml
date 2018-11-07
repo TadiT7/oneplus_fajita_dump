@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<perf version="1" switch="1" timeout="20000">
+<pkg name="com.miHoYo.bh3.nearme.gamecenter" perflock="7000"/>
+<pkg name="com.tencent.tmgp.sgame" perflock="10000"/>
+<pkg name="com.blizzard.wtcg.hearthstone" perflock="10000"/>
+<pkg name="com.gameloft.android.ANMP.GloftA8CN" perflock="15000"/>
+<pkg name="com.tencent.tmgp.cf" perflock="25000"/>
+<pkg name="com.imangi.templerun2" perflock="21000"/>
+<pkg name="com.tencent.tmgp.pubgmhd" perflock="14000"/>
+<pkg name="com.fgol.oppo" perflock="9000"/>
+<pkg name="pl.idreams.SkyForceReloaded2016" perflock="25000"/>
+<pkg name="com.madfingergames.unkilled" perflock="17000"/>
+<pkg name="com.ea.game.starwarscapital_row" perflock="19000"/>
+<pkg name="com.ea.game.nfs14_row" perflock="25000"/>
+<pkg name="com.ea.game.pvzfree_row" perflock="25000"/>
+<pkg name="com.ustwo.monumentvalley" perflock="6000"/>
+<pkg name="com.elex.lastbattlegroundsurvival" perflock="4000"/>
+<perflock level="1" param="0x41004000,2"/>
+<schedtune level="0">
+    <item path="/sys/module/lpm_levels/parameters/cluster_prediction" param="0" default="1"/>
+</schedtune>
+</perf>
